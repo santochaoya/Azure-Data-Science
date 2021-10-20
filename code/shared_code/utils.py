@@ -43,10 +43,10 @@ def show_distribution(feature):
     :return: distribution graphic of feature
     """
 
-    # if not is_numeric_dtype(feature):
-    #     raise TypeError(
-    #         "Please use a numeric value as the inputting feature."
-    #     )
+    if not is_numeric_dtype(feature):
+        raise TypeError(
+            "Please use a numeric value as the inputting feature."
+        )
 
     # Get statistics
     min_val = feature.min()
@@ -94,13 +94,10 @@ def show_density(feature):
         Probability density function graphic with some statistics metrics.
     """
 
-    # if not is_numeric_dtype(feature):
-    #     raise TypeError(
-    #         "Please use a numeric value as the inputting feature."
-    #     )
-
-    # plot the distribution without outliers
-    show_distribution(feature)
+    if not is_numeric_dtype(feature):
+        raise TypeError(
+            "Please use a numeric value as the inputting feature."
+        )
 
     # plot the density graphic
     fig = plt.figure(figsize=(10, 4))
