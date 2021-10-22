@@ -113,8 +113,8 @@ model = Lasso().fit(X_train, y_train)
 ## Decision Tree - an alternative linear model
 
 ```python
-import sklearn.tree import DecisionTreeRegressor
-import sklearn.tree import export_text
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree import export_text
 
 # Train the model
 model = DecisionTreeRegressor().fit(X_train, y_train)
@@ -194,7 +194,15 @@ print(model, "\n")
 
 
 
+There are some parameters templates for models:
 
+* **Decision Tree**
+
+  ```
+  
+  ```
+
+  
 
 ## Preprocessing Data
 
@@ -242,15 +250,55 @@ model = pipeline.fit(X_train, y_train)
 
 
 
-
-
-
-
 ### Example
 
-```
-# Evaluate the model using the testing dataset
-predictions = model.predict(X_test)
+Preprocessing, grid search cross-validation, regression model, evaluation, and graphic together.
+
+```python
+# Train the model
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.ensemble import GradientBoostingRegressor
+import numpy as np
+
+# Define preprocessing for numeric columns (scale them)
+numeric_features = [6,7,8,9]
+numeric_transformer = Pipeline(steps=[
+    ('scaler', StandardScaler())])
+
+# Define preprocessing for categorical features (encode them)
+categorical_features = [0,1,2,3,4,5]
+categorical_transformer = Pipeline(steps=[
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))])
+
+# Combine preprocessing steps
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)])
+
+# Create preprocessing and training pipeline
+pipeline = Pipeline(steps=[('preprocessor', preprocessor),
+                           ('regressor', GradientBoostingRegressor())])
+
+# Identify the hyperparameter values
+params = {
+    'regressor__learning_rate': [0.1, 0.5, 1.0],
+    'regressor__n_estimators': [50, 100, 150]
+}
+
+# Find the best hyperparameter combination to get the optimal R2
+score = make_scorer(r2_score)
+grid_search = GridSearchCV(pipeline, params, scoring=score, cv=3, return_train_score=True)
+grid_search.fit(X_train, y_train)
+print('The best parameter combination:{}\n'.format(grid_search.best_params_))
+
+# Get predictions with testing dataset
+predictions = grid_search.predict(X_test)
+
+# Display metrics
 mse = mean_squared_error(y_test, predictions)
 print('MSE: ', mse)
 rmse = np.sqrt(mse)
@@ -272,5 +320,35 @@ plt.plot(y_test, p(y_test), color='green')
 
 # show the graphic
 plt.show()
+
+# Save models to file
+import joblib
+
+filename = './data/trained_model.pkl'
+joblib.dump(grid_search, filename)
+
+# Load the model from file
+model = joblib.load(finename)
+
+# Predict new array
+X_new = np.array([[16.2,289.3248,5,24.98203,121.54348],
+                  [13.6,4082.015,0,24.94155,121.5038]])
+
+predictions_new = model.predict(X_new)
 ```
 
+
+
+> Linear Regression might not need to use GridSearchCV.  If have to, can use parameters I found on the internet:
+>
+> ```python
+> ...
+> # define search space
+> space = dict()
+> space['solver'] = ['svd', 'cholesky', 'lsqr', 'sag']
+> space['alpha'] = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100]
+> space['fit_intercept'] = [True, False]
+> space['normalize'] = [True, False]
+> ```
+>
+> 

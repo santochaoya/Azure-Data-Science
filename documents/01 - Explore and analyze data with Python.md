@@ -459,7 +459,13 @@ The kind of density distribution is right skewed. The mass of the data is on the
   * **Scatter Plot**
 
     Comparing the correlation between two numeric variables is to use scatter plot.
-
+    
+    ```python
+    df_sample.plot.scatter(title='Study Time vs Grade', x='StudyHours', y='Grade')
+    ```
+    
+    
+  
   ![EDA6](C:\Users\Xiao_Meng\OneDrive - EPAM\Dodumentations\Images\EDA6.PNG)
-
+  
   It looks like there is a discernible pattern in which the students who studied the most hours are also the students who got the highest grades.
