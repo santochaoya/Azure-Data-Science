@@ -96,7 +96,7 @@ y_scores = model.predict_proba(X_test)
   from sklearn.metrics import confusion_matrix
   import matplotlib.pyplot as plt
   
-  # Calculate ROC curve with label in testing datasetn and probabilities of positive cases
+  # Calculate ROC curve with label in testing dataset and probabilities of positive cases
   fpr, tpr, thresholds = roc_curve(y_test, y_score[:, 1])
   
   # Plot ROC curve
@@ -149,13 +149,19 @@ The multiclass classification means label with more than two classes. It can be 
   * Class 1 or Class 3
   * Class 2 or Class 3
 
-## Evaluate
+## Train and Evaluate
 
 Most of the steps are the same as the Binary Classification Models. When evaluate multiclass Classification models, we can use a heat map to identify the confusion matrix.
 
 ```python
 import numpy as np
 import mapplotlib.pyplot as plt
+
+# Train the multiclass logistic regression model
+multi_model = LogisticRegression(C=1/reg, solver='lbfgs', multi_class='auto', max_iter=10000).fit(X_train, y_train)
+
+# Predict on testing dataset
+predictions = multi_model.predict(X_test)
 
 # Get the confusion matrix
 mcm = confusion_matrix(y_test, predictions)

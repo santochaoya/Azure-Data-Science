@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from pandas.api.types import is_numeric_dtype
 from pandas.api.types import is_string_dtype
 
+from sklearn.metrics import roc_curve
+
 
 def add_statistics_line(figure, feature, metrics):
     """Add a statistic line on graphic with a specific required method.
@@ -136,4 +138,27 @@ def trim_outliers_minimum(df, feature, min_percentile):
     """
 
     return df[df[feature] > df[feature].quantile(min_percentile)]
+
+def plot_ROC_curve(y_test, y_score):
+    """Calculate ROC Curve between label in testing dataset and probability of positive cases, and plot the curve
+
+    :param y_test: Pandas series
+        label in testing dataset
+    :param y_score: Pandas series
+        Probabilities of positive cases
+
+    """
+
+    # Calculate the ROC curve
+    fpr, tpr, threshold = roc_curve(y_test, y_score)
+
+    # Plot the ROC Curve
+    fig = plt.figure(figsize=(8, 6))
+
+    # Plrt the FPR, TPR
+    plt.plot(fpr, tpr)
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC Curve')
+    plt.show()
 
