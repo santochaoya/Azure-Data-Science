@@ -1,0 +1,170 @@
+This documents will apply a regression model with Azure Machine Learning. The previous document has already introduce how to use Azure Machine Learning designer to train and publish a regression model.
+
+
+
+# Get Dataset
+
+Add dataset from pipeline will follow the instructions from document [Automated Maching Learning in Azure Machine Learning](./06 - Automated Machine Learning in Azure Machine Learning.md)
+
+
+
+## Add dataset
+
+1. In the **Sample datasets** section, and drag the **Automobile price data (Raw)** dataset from the **Samples** section onto the canvas.
+2. Right-click (Ctrl+click on a Mac) the **Automobile price data (Raw)** dataset on the canvas, and on the **Outputs** menu, select **Dataset output** by clicking on the *Preview data* graph icon can see the distributions of the features as histograms. Also, you can click the column name to get the detail statistic information.
+
+## Explore dataset
+
+1. We can get the **missing value** of each column. 
+   * Some of them have quite a few missing values in the column. This will make them usefulness in predicting the label. So it is better to **exclude these columns**
+   * Some of the columns have few missing values. So if **exclude the missing rows**, they will still be useful.
+2. **Normalize the features**
+
+
+
+# Data Transformations
+
+## Add Selected Columns
+
+* Drag ==**Select Columns in Dataset** module==, connect to data source module
+
+* Setting **Select Columns in Dataset** module
+
+## Missing value
+
+* Drag a ==**Clean Missing Data** module==, connect to **Select Columns in Dataset** module
+* Setting  the **Clean Missing Data** module,
+
+## Normalize features
+
+* Drag a ==**Normalize Data** module==, connect to **Clean Missing Data** module
+
+
+
+Check the tranformation by selecting the last module, click the visualize icon from tranformed dataset.
+
+
+
+# Training Model
+
+In Azure Machine Learning, we can create the training modules to the pipelines.
+
+
+
+## Split dataset
+
+* Drag a ==**Split Data**==, with settings:
+  * **Splitting mode**: Split Rows
+  * **Fraction of rows in the first output dataset**: 0.7 (Training : Test)
+  * **Random seed**: 123
+  * **Stratified split**: False
+
+## Train  Model
+
+* Drag a ==**Train Model**==, with settings:
+  * connect to the output of  ==**Split Data**==
+  * setting **Label colulmn** to label
+
+* Drag an algorithm like ==**Linear Regression**==
+
+  * connect to the *left* input of ==**Train Model**== as **Untrained model**
+
+    
+
+## Output the trained model
+
+* Drag ==**Score Model**==
+  * connect to output of ==**Train Model**== and ==**Split Data**==
+
+After submitting the pipeline with ==**Score Model**==, from the **Outputs + logs** tab, in the **Scored dataset** section, use **Preview Data**, we can see the **Scored Labels** is the predicted label from the ==**Train Model**==
+
+
+
+## Evaluate Model
+
+* Drag ==**Evaluate Model**==
+
+  * connect to the output of ==**Score Model**== as the left input
+
+  * **Submit**, check on the **Outputs + logs** tab
+
+    * **Mean Absolute Error(MAE)**: Average difference between the predicted and actual value. *Lower is better*
+    * **RMSE**
+    * **Relative Squared Error(RSE)**: between 0 and 1, *Lower is better*
+    * **Relative Absolute Error(RAE)**: between 0 and 1, *Lower is better*
+    * **Coefficient of Determination($$R^2$$**): How much variance between predicted and actual values is explained by the model. between 0 and 1, *Larger is better*
+* More details to see: [**Evaluate the model**](../Machine Learning/Preparetions.md)
+
+
+
+![AzMLRegression1](C:\Users\Xiao_Meng\OneDrive - EPAM\Dodumentations\Images\AzMLRegression1.PNG)
+
+
+
+# Inference Pipeline
+
+After the model pipeline, we need a second pipeline to perform the same data transformation for the new dataset, and then use the trained model to infer label values based on its features.
+
+
+
+1. On the **Designer** page, open the **Auto Price Training** pipeline
+
+2. Navigate to the the **Create inference pipeline** drop-down list, click **Real-time inference pipeline**
+
+   *If the pipeline does not include **Web Service Input** and **Web Service Output** modules, go back to the **Designer** page and then re-open the **Auto Price Training-real time inference** pipeline.*
+
+We will change some modules here, 
+
+3. Delete **Automobile price data (Raw)** and replace it with an **Enter Data Manually**, containing the following CSV data, which includes feature values without labels for three cars (copy and paste the entire block of text):
+
+4. Connect the new **Enter Data Manually**
+
+5. Remove the **price** field.
+
+6. Delete **Evaluate Model** module, which is not useful when predicting from new data
+
+7. The output from the **Score Model** module includes all of the input features as well as the predicted label. To modify the output to include only the prediction:
+
+   ```python
+   import pandas as pd
+   
+   def azureml_main(dataframe1 = None, dataframe2 = None):
+   
+       scored_results = dataframe1[['Scored Labels']]
+       scored_results.rename(columns={'Scored Labels':'predicted_price'},
+                           inplace=True)
+       return scored_results
+   ```
+
+   
+
+- Connect the output from the **Score Model** module to the **Dataset1** (left-most) input of the **Execute Python Script**, and connect the output of the **Execute Python Script** module to the **Web Service Output**.
+
+![AzMLRegression2](C:\Users\Xiao_Meng\OneDrive - EPAM\Dodumentations\Images\AzMLRegression2.PNG)
+
+**Submit** the pipeline as a **new** experiment named **mslearn-auto-inference** on your compute cluster
+
+
+
+# Deploy a service
+
+1. At the top right, select **Deploy**, and deploy a **new real-time endpoint**, using the following settings:
+   - **Name**: predict-auto-price
+   - **Description**: Auto price regression.
+   - **Compute type**: Azure Container Instance
+2. Wait for the web service to be deployed - this can take several minutes. The deployment status is shown at the top left of the designer interface.
+
+
+
+---
+
+---
+
+
+
+# Summary
+
+TODO: add graphic of the process of creating an Azure ML model.
+
+
+
