@@ -46,3 +46,10 @@ def section_label(label):
     
     return print(beginning, label_line, delimeter_line)
 
+def section_ending():
+    """
+    The ending line of each sections.
+    """
+
+    return print('\n' + ' ' + '-' * 125)
+
