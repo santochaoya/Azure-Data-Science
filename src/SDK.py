@@ -1,7 +1,10 @@
 from shared_code.PrinttingTemplate import *
 
 from azureml.core import Workspace, Experiment
+from azureml.widgets import RunDetails
+
 import pandas as pd
+import json
 
 
 # -----------------------------------------------------------------------------------------------------------------------------
@@ -30,14 +33,18 @@ section_label('Connect to Experiment')
 experiment = Experiment(workspace=ws, name='SDK-exercise')
 
 # Start the experiment
-run = experiment.start_logging()
+run = experiment.start_logging(snapshot_directory=None)
 
 # Exercuse the experiment
-data = pd.read_csv('../data/wine.csv')
+data = pd.read_csv('data/real_estate.csv')
 row_count = (len(data))
 
 # Log the row count
 run.log('observations', row_count)
+
+# Get logged metrics
+metrics = run.get_metrics()
+print(json.dumps(metrics, indent=2))
 
 # End the experiment
 run.complete()
