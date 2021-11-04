@@ -10,7 +10,7 @@ packages = CondaDependencies.create(pip_packages=['azureml-defaults','scikit-lea
 sklearn_env.python.conda_dependencies = packages
 
 # Create a script config
-script_config = ScriptRunConfig(source_directory='src/SDK/training',
+script_config = ScriptRunConfig(source_directory='training',
                                 script='training.py',
                                 environment=sklearn_env)
 
@@ -20,5 +20,5 @@ ws = Workspace.from_config()
 experiment_name = 'SDK-exercise'
 experiment = Experiment(workspace=ws, name=experiment_name)
 run = experiment.submit(config=script_config)
-# run.wait_for_completion()
+run.complete()
 
