@@ -5,7 +5,7 @@ from azureml.core.conda_dependencies import CondaDependencies
 # Create a python environment
 sklearn_env = Environment('sklearn-env')
 
-# Ensure the required packages are installed
+# Ensure the required packages are installedr
 packages = CondaDependencies.create(pip_packages=['azureml-defaults','scikit-learn'])
 sklearn_env.python.conda_dependencies = packages
 
