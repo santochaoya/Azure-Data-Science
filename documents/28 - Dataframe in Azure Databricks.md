@@ -165,10 +165,26 @@ distinctDF = (pagecountsEnAllDF
 
 # DataFrames vs SQL & Temporary Views
 
-```python
-tableDF = spark.sql('select distinct project from pagecounts order by project')
-display(tableDF)
-```
+* Temporary Views
+
+  ```python
+  pagecountsEnAllDF.createOrReplaceTempView('pagecounts')
+  ```
+
+* Show SQL
+
+  ```
+  tableDF = spark.sql('select distinct project from pagecounts order by project')
+  display(tableDF)
+  ```
+
+  or
+
+  ```python
+  tableDF.show()
+  ```
+
+  
 
 
 
