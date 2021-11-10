@@ -79,9 +79,18 @@ The workspace creation takes a few minutes. During workspace creation, the **Sub
 
 ## Attach detach notebook 
 
-If your notebook is attached to a cluster, you can:
+### Attach
 
-- Detach your notebook from the cluster
+From the right-top selection
+
+![databricks2](/Users/xiao/Projects/git/Microsoft-Azure-Data-Science/Images/databricks2.png)
+
+
+
+### Detach
+
+* Detach your notebook from the cluster
+
 - Restart the cluster
 - Attach to another cluster
 - Open the Spark UI
