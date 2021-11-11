@@ -27,3 +27,4 @@ for file in run.get_file_names():
     print(file)
 
     run.download_file(name=file, output_file_path='outputs/log.txt')
+    
