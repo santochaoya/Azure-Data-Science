@@ -53,9 +53,9 @@ There are several ways to create a workspace:
 
 
 
-# Azure Machine Learning SDK
+# Azure ML SDK
 
-## Installation
+## Installation 
 
 ```bash
 pip install azureml-sdk
@@ -89,8 +89,6 @@ from azureml.core import Workspace
 ws = Workspace.from_config()
 print(ws.name, "loaded")
 ```
-
-
 
 ## View Azure ML resources in the workspace
 
