@@ -51,52 +51,31 @@ Save the script as ```training.py``` in the folder ```training```.
 
 A script that need to run as an experiment must be set for
 
-* **environment**
-  * create the environment
-  
-    ```python
-    from azureml.core import Experiment, ScriptRunConfig, Environment, Workspace
-    from azureml.core.conda_dependencies import CondaDependencies
-    
-    # Create the Python environment for the experiment
-    sklearn_env = Environment('sklearn-env')
-    ```
-  
-    
-  
-  * ensure the required packages installed
-  
-    ```python
-    # Ensure packaged installed
-    packages = CondaDependencies.create(conda_packages=['scikit-learn', 'pip'],
-    																		pip_packages=['azureml-defaults'])
-    sklearn_env.python.conda_denpendencies = packages
-    ```
-  
-    
-  
-* **config**
+```python
+# Ensure packaged installed
+packages = CondaDependencies.create(conda_packages=['scikit-learn', 'pip'],
+																		pip_packages=['azureml-defaults'])
+sklearn_env.python.conda_denpendencies = packagesfrom azureml.core import Experiment, ScriptRunConfig, Environment, Workspace
+from azureml.core.conda_dependencies import CondaDependencies
 
-  configuration of script, same as previous document
+# Create the Python environment for the experiment
+sklearn_env = Environment('sklearn-env')
 
-  ```python
-  # Create a script config
-  script_config = ScriptRunConfig(source_directory='training',
-  																script='training.py',
-                                 	environment=sklearn_env)
-  ```
+# Ensure packaged installed
+packages = CondaDependencies.create(conda_packages=['scikit-learn', 'pip'],
+																		pip_packages=['azureml-defaults'])
+sklearn_env.python.conda_denpendencies = packages
 
-  
+# Create a script config
+script_config = ScriptRunConfig(source_directory='training',
+																script='training.py',
+                               	environment=sklearn_env)
 
-* **Submit**
-
-  Submit the experiment
-
-  ```python
-  experiment = Experiment(workspace=ws, name='SDK-exercise')
-  run = experiment.submit(config=script_config)
-  run.wait_for_completion()
-  ```
+# Submit the experiment
+experiment = Experiment(workspace=ws, name='SDK-exercise')
+run = experiment.submit(config=script_config)
+run.wait_for_completion()
+```
 
 
 
