@@ -70,3 +70,34 @@ pip install azureml-sdk azureml-widgets
 
 
 ## Connect to a Workspace
+
+We can also connent a workspace from an existing configuration files in JSON format. For example, ```config.json```
+
+```json
+{
+  	"subscription_id": "<your subscription id here>",
+  	"resource_group": "XimeCraft_MachingLearning",
+    "workspacke_name": "AzML_Regression"
+}
+```
+
+Then connect the workspace in Python SDK:
+
+```python
+from azureml.core import Workspace
+
+ws = Workspace.from_config()
+print(ws.name, "loaded")
+```
+
+
+
+## View Azure ML resources in the workspace
+
+```python
+print('Compute Resources: \n')
+for compute_name in ws.compute_targets:
+  	compute = ws.compute_targets[compute_name]
+    print('\t', compute.name, ':', compute.type)
+```
+
