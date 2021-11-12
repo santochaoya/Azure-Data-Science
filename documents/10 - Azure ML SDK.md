@@ -53,9 +53,7 @@ There are several ways to create a workspace:
 
 
 
-# Azure ML SDK
-
-## Installation 
+## Installation- SDK
 
 ```bash
 pip install azureml-sdk
@@ -98,4 +96,12 @@ for compute_name in ws.compute_targets:
   	compute = ws.compute_targets[compute_name]
     print('\t', compute.name, ':', compute.type)
 ```
+
+
+
+# Experiment
+
+
+
+
 
